@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reykjavík Retail — Importing Excellence</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230A0A0A'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='Georgia,serif' fill='%23C9A84C'>RR</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold:       #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dark:  #9A7730;
+      --black:      #0A0A0A;
+      --off-black:  #111111;
+      --charcoal:   #1C1C1C;
+      --white:      #FAFAF8;
+      --off-white:  #F2F0EB;
+      --gray:       #888880;
+      --serif:      'Cormorant Garamond', Georgia, serif;
+      --sans:       'Montserrat', sans-serif;
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--gold); color: var(--black); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--off-black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ── Utility ── */
+    .gold { color: var(--gold); }
+    .gold-line {
+      display: block; width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      margin: 1.2rem auto;
+    }
+    .gold-line.left { margin-left: 0; }
+    .section-label {
+      font-family: var(--sans);
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── Preloader ── */
+    #preloader {
+      position: fixed; inset: 0;
+      background: var(--off-black);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity .8s ease, visibility .8s ease;
+    }
+    #preloader.hidden { opacity: 0; visibility: hidden; }
+    .preloader-logo {
+      font-family: var(--serif);
+      font-size: 2.5rem;
+      color: var(--white);
+      letter-spacing: .15em;
+      opacity: 0;
+      animation: fadeUp .8s .3s forwards;
+    }
+    .preloader-logo span { color: var(--gold); }
+    .preloader-bar-wrap {
+      width: 180px; height: 1px;
+      background: rgba(255,255,255,.15);
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+    .preloader-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+      width: 0;
+      animation: loadBar 1.6s .5s ease forwards;
+    }
+    @keyframes loadBar { to { width: 100%; } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.6rem 5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background .4s, padding .4s, box-shadow .4s;
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,.95);
+      backdrop-filter: blur(12px);
+      padding: 1rem 5vw;
+      box-shadow: 0 1px 0 rgba(201,168,76,.25);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: .08em;
+      display: flex; flex-direction: column; line-height: 1;
+      white-space: nowrap;
+    }
+    .nav-logo small {
+      font-family: var(--sans);
+      font-size: .5rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 3px;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: .7rem;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      position: relative;
+      transition: color .3s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width .3s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      font-family: var(--sans);
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      border: 1px solid var(--gold);
+      padding: .55rem 1.4rem;
+      white-space: nowrap;
+      transition: background .3s, color .3s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ── Hero ── */
+    #hero {
+      position: relative;
+      height: 100vh; min-height: 700px;
+      background: var(--off-black);
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(135deg, rgba(0,0,0,.85) 40%, rgba(201,168,76,.08) 100%),
+        url('https://images.unsplash.com/photo-1640357897497-599b4fc84f51?w=1800&q=80') center/cover no-repeat;
+      transform: scale(1.08);
+      transition: transform 8s ease;
+    }
+    #hero.loaded .hero-bg { transform: scale(1); }
+    .hero-particles {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      padding: 0 8vw;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      font-family: var(--sans);
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeUp .8s 2s forwards;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.05;
+      margin-top: 1.2rem;
+      opacity: 0;
+      animation: fadeUp .9s 2.15s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: .85rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.6);
+      letter-spacing: .06em;
+      line-height: 1.9;
+      max-width: 520px;
+      margin-top: 1.8rem;
+      opacity: 0;
+      animation: fadeUp .9s 2.3s forwards;
+    }
+    .hero-actions {
+      display: flex; gap: 1.2rem; margin-top: 2.8rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .9s 2.45s forwards;
+    }
+    .btn-primary {
+      font-family: var(--sans);
+      font-size: .65rem; font-weight: 600;
+      letter-spacing: .2em; text-transform: uppercase;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+      color: var(--black);
+      border: none; padding: 1rem 2.5rem;
+      cursor: pointer; text-decoration: none;
+      position: relative; overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+      opacity: 0; transition: opacity .3s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(201,168,76,.35); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary span { position: relative; }
+    .btn-outline {
+      font-family: var(--sans);
+      font-size: .65rem; font-weight: 500;
+      letter-spacing: .2em; text-transform: uppercase;
+      background: transparent;
+      color: rgba(255,255,255,.8);
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 1rem 2.5rem;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .3s, color .3s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .6rem;
+      opacity: 0; animation: fadeUp .8s 2.8s forwards;
+    }
+    .hero-scroll span {
+      font-size: .55rem; letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    }
+    .scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s 3s infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity: 1; transform: scaleY(1); }
+      50%      { opacity: .4; transform: scaleY(.7); }
+    }
+    .hero-stats {
+      position: absolute; bottom: 3rem; right: 8vw;
+      display: flex; gap: 3rem;
+      opacity: 0; animation: fadeUp .8s 2.6s forwards;
+    }
+    .stat-item { text-align: right; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 2.4rem; font-weight: 300;
+      color: var(--white); line-height: 1;
+    }
+    .stat-num span { color: var(--gold); }
+    .stat-label {
+      font-size: .58rem; letter-spacing: .2em;
+      text-transform: uppercase; color: rgba(255,255,255,.4);
+      margin-top: .3rem;
+    }
+
+    /* ── Section Base ── */
+    section { position: relative; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 5vw; }
+    .section-head { text-align: center; margin-bottom: 5rem; }
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300; line-height: 1.15;
+    }
+    .section-head p {
+      font-size: .85rem; line-height: 1.9;
+      color: var(--gray); max-width: 560px; margin: 1.2rem auto 0;
+    }
+
+    /* ── Reveal animations ── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .delay-1 { transition-delay: .1s; }
+    .delay-2 { transition-delay: .2s; }
+    .delay-3 { transition-delay: .3s; }
+    .delay-4 { transition-delay: .4s; }
+    .delay-5 { transition-delay: .5s; }
+
+    /* ── About ── */
+    #about { padding: 8rem 0; background: var(--white); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-img-wrap::before {
+      content: '';
+      position: absolute;
+      top: -20px; left: -20px;
+      width: 60%; height: 60%;
+      border: 1px solid var(--gold);
+      opacity: .4;
+      z-index: 0;
+    }
+    .about-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 60%; height: 60%;
+      border: 1px solid var(--gold);
+      opacity: .4;
+      z-index: 0;
+    }
+    .about-img {
+      width: 100%; aspect-ratio: 4/5;
+      object-fit: cover;
+      position: relative; z-index: 1;
+      filter: grayscale(20%);
+    }
+    .about-badge {
+      position: absolute; bottom: 2rem; left: -2rem;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--black);
+      padding: 1.4rem 1.6rem;
+      z-index: 2;
+      text-align: center;
+    }
+    .about-badge strong {
+      font-family: var(--serif);
+      font-size: 2.2rem; font-weight: 300;
+      display: block; line-height: 1;
+    }
+    .about-badge span {
+      font-size: .55rem; letter-spacing: .2em; text-transform: uppercase;
+    }
+    .about-text h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; line-height: 1.2;
+    }
+    .about-text p {
+      font-size: .85rem; line-height: 1.95;
+      color: #555; margin-top: 1.4rem;
+    }
+    .about-features {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .feature-item {
+      display: flex; gap: .8rem; align-items: flex-start;
+    }
+    .feature-icon {
+      width: 40px; height: 40px;
+      border: 1px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--gold);
+    }
+    .feature-icon svg { width: 18px; height: 18px; }
+    .feature-item h4 {
+      font-family: var(--sans);
+      font-size: .7rem; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: .3rem;
+    }
+    .feature-item p { font-size: .75rem; color: var(--gray); line-height: 1.7; margin: 0; }
+
+    /* ── Services ── */
+    #services {
+      padding: 9rem 0;
+      background: var(--off-black);
+      color: var(--white);
+    }
+    #services .section-head h2 { color: var(--white); }
+    #services .section-head p  { color: rgba(255,255,255,.45); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .service-card {
+      padding: 3.5rem 2.8rem;
+      border-right: 1px solid rgba(255,255,255,.06);
+      position: relative; overflow: hidden;
+      cursor: default;
+      transition: background .4s;
+    }
+    .service-card:last-child { border-right: none; }
+    .service-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,.06), transparent);
+      opacity: 0; transition: opacity .4s;
+    }
+    .service-card:hover { background: rgba(255,255,255,.025); }
+    .service-card:hover::before { opacity: 1; }
+    .service-num {
+      font-family: var(--serif);
+      font-size: 4rem; font-weight: 300;
+      color: rgba(201,168,76,.15);
+      line-height: 1; margin-bottom: 2rem;
+      transition: color .4s;
+    }
+    .service-card:hover .service-num { color: rgba(201,168,76,.4); }
+    .service-icon {
+      width: 48px; height: 48px; margin-bottom: 1.5rem;
+      color: var(--gold);
+    }
+    .service-card h3 {
+      font-family: var(--serif);
+      font-size: 1.6rem; font-weight: 300;
+      color: var(--white); margin-bottom: .8rem;
+    }
+    .service-card p {
+      font-size: .8rem; line-height: 1.9;
+      color: rgba(255,255,255,.45);
+    }
+    .service-arrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-top: 2rem;
+      font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold);
+      transition: gap .3s;
+    }
+    .service-card:hover .service-arrow { gap: .9rem; }
+
+    /* ── Advisory Banner ── */
+    #advisory {
+      padding: 8rem 0;
+      background: var(--white);
+    }
+    .advisory-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    .advisory-text {
+      padding: 5rem;
+      background: var(--off-black);
+      color: var(--white);
+    }
+    .advisory-text h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem,3.5vw,2.8rem);
+      font-weight: 300; line-height: 1.2;
+    }
+    .advisory-text p {
+      font-size: .82rem; line-height: 1.95;
+      color: rgba(255,255,255,.5); margin-top: 1.4rem;
+    }
+    .advisory-list {
+      list-style: none; margin-top: 2.2rem; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .advisory-list li {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: .78rem; color: rgba(255,255,255,.65);
+      letter-spacing: .05em;
+    }
+    .advisory-list li::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--gold); flex-shrink: 0;
+    }
+    .advisory-img {
+      position: relative; overflow: hidden;
+    }
+    .advisory-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(30%);
+      transition: transform 6s ease;
+    }
+    .advisory-img:hover img { transform: scale(1.04); }
+    .advisory-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,.12), transparent);
+    }
+
+    /* ── Partners / Distribution Map ── */
+    #distribution {
+      padding: 9rem 0;
+      background: var(--charcoal);
+      color: var(--white);
+    }
+    #distribution .section-head h2 { color: var(--white); }
+    #distribution .section-head p  { color: rgba(255,255,255,.4); }
+    .dist-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.06);
+      margin-top: 4rem;
+    }
+    .dist-card {
+      background: var(--charcoal);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: background .3s;
+    }
+    .dist-card:hover { background: rgba(201,168,76,.05); }
+    .dist-card-icon {
+      color: var(--gold); margin-bottom: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; margin-left: auto; margin-right: auto;
+    }
+    .dist-card-icon svg { width: 28px; height: 28px; }
+    .contact-detail-icon svg { width: 18px; height: 18px; }
+    .dist-card h4 {
+      font-family: var(--serif);
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--white);
+    }
+    .dist-card p { font-size: .75rem; color: rgba(255,255,255,.4); margin-top: .5rem; line-height: 1.7; }
+
+    /* ── Partners logos ── */
+    #partners {
+      padding: 6rem 0;
+      background: var(--white);
+    }
+    .partners-label {
+      text-align: center;
+      font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 3.5rem;
+    }
+    .partners-track-wrap { overflow: hidden; position: relative; }
+    .partners-track-wrap::before,
+    .partners-track-wrap::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0; width: 120px;
+      z-index: 1;
+    }
+    .partners-track-wrap::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
+    .partners-track-wrap::after  { right:0; background: linear-gradient(to left,  var(--white), transparent); }
+    .partners-track {
+      display: flex; gap: 5rem; align-items: center;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    .partners-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .partner-logo {
+      font-family: var(--serif);
+      font-size: 1.25rem; font-weight: 300;
+      letter-spacing: .1em;
+      color: rgba(0,0,0,.25);
+      white-space: nowrap;
+      transition: color .3s;
+    }
+    .partner-logo:hover { color: var(--gold); }
+
+    /* ── Testimonials ── */
+    #testimonials {
+      padding: 9rem 0;
+      background: linear-gradient(160deg, var(--off-black) 0%, var(--charcoal) 100%);
+      color: var(--white);
+    }
+    #testimonials .section-head h2 { color: var(--white); }
+    #testimonials .section-head p  { color: rgba(255,255,255,.4); }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .testimonial-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      padding: 3rem 2.5rem;
+      position: relative;
+      transition: border-color .3s, background .3s;
+    }
+    .testimonial-card:hover {
+      border-color: rgba(201,168,76,.3);
+      background: rgba(201,168,76,.03);
+    }
+    .testimonial-quote {
+      font-family: var(--serif);
+      font-size: 3rem; color: var(--gold);
+      line-height: 1; margin-bottom: 1.5rem; opacity: .5;
+    }
+    .testimonial-card p {
+      font-family: var(--serif);
+      font-size: 1rem; font-style: italic;
+      font-weight: 300; line-height: 1.8;
+      color: rgba(255,255,255,.7);
+    }
+    .testimonial-author {
+      margin-top: 2rem; padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .testimonial-author strong {
+      display: block; font-family: var(--sans);
+      font-size: .72rem; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .testimonial-author span {
+      font-size: .7rem; color: rgba(255,255,255,.35);
+      margin-top: .2rem; display: block;
+    }
+
+    /* ── Numbers Strip ── */
+    #numbers {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-light) 100%);
+    }
+    .numbers-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      divide: solid;
+    }
+    .number-item {
+      text-align: center; padding: 2rem 1rem;
+      border-right: 1px solid rgba(0,0,0,.12);
+    }
+    .number-item:last-child { border-right: none; }
+    .number-val {
+      font-family: var(--serif);
+      font-size: 3.5rem; font-weight: 300;
+      color: var(--black); line-height: 1;
+    }
+    .number-label {
+      font-size: .6rem; letter-spacing: .25em; text-transform: uppercase;
+      color: rgba(0,0,0,.6); margin-top: .6rem;
+    }
+
+    /* ── Team ── */
+    #team { padding: 9rem 0; background: var(--white); }
+    .team-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2.5rem;
+    }
+    .team-card {
+      position: relative; overflow: hidden;
+      cursor: default;
+    }
+    .team-img-wrap {
+      position: relative; overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+    .team-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(40%);
+      transition: transform .6s ease, filter .6s ease;
+    }
+    .team-card:hover .team-img-wrap img {
+      transform: scale(1.05); filter: grayscale(0%);
+    }
+    .team-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.7) 0%, transparent 50%);
+    }
+    .team-info {
+      padding: 1.5rem 1rem;
+    }
+    .team-info h3 {
+      font-family: var(--serif);
+      font-size: 1.3rem; font-weight: 400;
+    }
+    .team-info span {
+      font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── Contact ── */
+    #contact {
+      padding: 9rem 0;
+      background: var(--off-black);
+      color: var(--white);
+    }
+    #contact .section-head h2 { color: var(--white); }
+    #contact .section-head p  { color: rgba(255,255,255,.4); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 6rem; align-items: start;
+    }
+    .contact-info h3 {
+      font-family: var(--serif);
+      font-size: 1.8rem; font-weight: 300;
+      margin-bottom: 2rem;
+    }
+    .contact-detail {
+      display: flex; gap: 1rem; align-items: flex-start;
+      margin-bottom: 1.8rem;
+    }
+    .contact-detail-icon {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(201,168,76,.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); flex-shrink: 0;
+    }
+    .contact-detail h4 {
+      font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .3rem;
+    }
+    .contact-detail p { font-size: .82rem; color: rgba(255,255,255,.55); line-height: 1.6; }
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: .5rem; }
+    .form-group label {
+      font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: .82rem;
+      padding: .9rem 1.1rem;
+      outline: none;
+      transition: border-color .3s, background .3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--gold);
+      background: rgba(201,168,76,.04);
+    }
+    .form-group textarea { min-height: 130px; resize: vertical; }
+    .form-group select option { background: var(--off-black); }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,.2); }
+
+    /* ── Footer ── */
+    footer {
+      background: #050505;
+      padding: 5rem 5vw 2.5rem;
+      color: rgba(255,255,255,.35);
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 4rem; padding-bottom: 4rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-brand h3 {
+      font-family: var(--serif);
+      font-size: 1.6rem; font-weight: 300;
+      color: var(--white); letter-spacing: .05em;
+    }
+    .footer-brand h3 span { color: var(--gold); }
+    .footer-brand p { font-size: .75rem; line-height: 1.9; margin-top: 1rem; }
+    .footer-col h4 {
+      font-size: .6rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.4rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+    .footer-col a {
+      font-size: .75rem; color: rgba(255,255,255,.35);
+      text-decoration: none; transition: color .3s;
+    }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 2.5rem;
+    }
+    .footer-bottom p { font-size: .7rem; }
+    .footer-socials { display: flex; gap: 1rem; }
+    .footer-socials a {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.35); font-size: .75rem; text-decoration: none;
+      transition: border-color .3s, color .3s;
+    }
+    .footer-socials a:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── Floating back-to-top ── */
+    #btt {
+      position: fixed; bottom: 2rem; right: 2rem;
+      width: 44px; height: 44px;
+      background: var(--gold);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--black); font-size: 1.1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s, transform .3s;
+      z-index: 50;
+    }
+    #btt.show { opacity: 1; pointer-events: all; }
+    #btt:hover { transform: translateY(-3px); }
+
+    /* ── Cursor accent ── */
+    .cursor-dot {
+      width: 8px; height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed; pointer-events: none;
+      z-index: 999; transform: translate(-50%, -50%);
+      transition: transform .1s, background .3s;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201,168,76,.5);
+      border-radius: 50%;
+      position: fixed; pointer-events: none;
+      z-index: 999; transform: translate(-50%, -50%);
+      transition: width .3s, height .3s, border-color .3s, left .12s ease-out, top .12s ease-out;
+    }
+
+    /* ── Extra animations ── */
+
+    /* Gold line shimmer */
+    .gold-line {
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+
+    /* Floating about badge */
+    .about-badge { animation: floatBadge 4s ease-in-out infinite; }
+    @keyframes floatBadge {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* 3D card tilt — applied via JS */
+    .service-card, .dist-card, .testimonial-card {
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* Ripple */
+    .btn-primary, .btn-outline {
+      position: relative; overflow: hidden;
+    }
+    .ripple {
+      position: absolute; border-radius: 50%;
+      transform: scale(0);
+      background: rgba(255,255,255,.25);
+      animation: rippleAnim .6s linear;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* Pulse on gold stat numbers */
+    @keyframes goldPulse {
+      0%,100% { text-shadow: 0 0 0 rgba(201,168,76,0); }
+      50%      { text-shadow: 0 0 30px rgba(201,168,76,.4); }
+    }
+    .number-val { animation: goldPulse 3s ease-in-out infinite; }
+
+    /* Service card gold border reveal on hover */
+    .service-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+      transition: width .5s ease;
+    }
+    .service-card:hover::after { width: 100%; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .about-grid,
+      .contact-grid,
+      .advisory-inner { grid-template-columns: 1fr; }
+      .advisory-img { min-height: 380px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); }
+      .testimonial-grid { grid-template-columns: 1fr 1fr; }
+      .dist-grid { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .numbers-grid { grid-template-columns: 1fr 1fr; }
+      .number-item:nth-child(2) { border-right: none; }
+      .number-item:nth-child(3) { border-right: 1px solid rgba(0,0,0,.12); }
+      .number-item { border-bottom: 1px solid rgba(0,0,0,.12); }
+      .hero-stats { display: none; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px; z-index: 200;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 1.5px;
+      background: var(--white);
+      transition: transform .35s, opacity .35s, background .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    /* ── Mobile nav overlay ── */
+    .mobile-nav {
+      position: fixed; inset: 0;
+      background: rgba(10,10,10,.97);
+      backdrop-filter: blur(12px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2.5rem;
+      z-index: 150;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s;
+    }
+    .mobile-nav.open { opacity: 1; pointer-events: all; }
+    .mobile-nav a {
+      font-family: var(--serif); font-size: 2.2rem; font-weight: 300;
+      color: var(--white); text-decoration: none; letter-spacing: .06em;
+      transition: color .3s;
+    }
+    .mobile-nav a:hover { color: var(--gold); }
+    .mobile-nav .mobile-cta {
+      font-family: var(--sans); font-size: .7rem; font-weight: 600;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid var(--gold);
+      padding: .8rem 2rem; margin-top: 1rem;
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .about-badge { left: .5rem; }
+      .testimonial-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
+      .footer-bottom { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .team-grid { grid-template-columns: 1fr; }
+      .cursor-dot, .cursor-ring { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Cursor ── -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ── Preloader ── -->
+<div id="preloader">
+  <div class="preloader-logo">Reykjavík <span>Retail</span></div>
+  <div class="preloader-bar-wrap"><div class="preloader-bar"></div></div>
+</div>
+
+<!-- ── Navigation ── -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    Reykjavík Retail
+    <small>Iceland — Est. 2013</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#advisory">Advisory</a></li>
+    <li><a href="#distribution">Distribution</a></li>
+    <li><a href="#testimonials">Partners</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Contact Us</a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── Mobile Nav ── -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about"        onclick="closeMobileNav()">About</a>
+  <a href="#services"     onclick="closeMobileNav()">Services</a>
+  <a href="#advisory"     onclick="closeMobileNav()">Advisory</a>
+  <a href="#distribution" onclick="closeMobileNav()">Distribution</a>
+  <a href="#testimonials" onclick="closeMobileNav()">Partners</a>
+  <a href="#contact" class="mobile-cta" onclick="closeMobileNav()">Contact Us</a>
+</div>
+
+<!-- ── Hero ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <canvas class="hero-particles" id="particles"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Iceland's Premier Import & Distribution Company</div>
+    <h1 class="hero-title">
+      Connecting the<br>
+      World to <em>Iceland</em>
+    </h1>
+    <p class="hero-sub">
+      Reykjavík Retail bridges global markets with Icelandic retailers —
+      importing premium goods, building robust supply chains, and guiding
+      the nation's retail sector toward excellence.
+    </p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-primary"><span>Our Services</span></a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">200<span>+</span></div>
+      <div class="stat-label">Product Lines</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">50<span>+</span></div>
+      <div class="stat-label">Retail Partners</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">12<span>+</span></div>
+      <div class="stat-label">Years of Excellence</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── About ── -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal-left">
+        <img
+          src="https://images.unsplash.com/photo-1625638627890-f92fb4907efc?w=800&q=80"
+          alt="Reykjavík harbour"
+          class="about-img"
+        />
+        <div class="about-badge">
+          <strong>12+</strong>
+          <span>Years Serving Iceland</span>
+        </div>
+      </div>
+
+      <div class="about-text">
+        <div class="reveal">
+          <span class="section-label">Who We Are</span>
+          <span class="gold-line left"></span>
+        </div>
+        <h2 class="reveal delay-1">
+          Iceland's Most<br>Trusted Retail<br>
+          <em style="color:var(--gold-dark)">Importer</em>
+        </h2>
+        <p class="reveal delay-2">
+          Founded in the heart of Reykjavík, we have spent over a decade
+          building trade corridors between Iceland and the world. From fresh
+          European foodstuffs to premium household goods, every product we
+          import meets our stringent quality benchmarks before it reaches
+          any shelf in Iceland.
+        </p>
+        <p class="reveal delay-2">
+          Beyond importing and distribution, we are proud to serve as
+          trusted advisors to some of Iceland's most respected retail
+          businesses — guiding strategy, supplier negotiations, and
+          category management.
+        </p>
+
+        <div class="about-features reveal delay-3">
+          <div class="feature-item">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <div>
+              <h4>Global Sourcing</h4>
+              <p>Direct relationships with suppliers across Europe, Asia, and the Americas.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/><line x1="19.07" y1="4.93" x2="4.93" y2="19.07"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <div>
+              <h4>Cold-Chain Logistics</h4>
+              <p>Temperature-controlled distribution for all perishable food imports.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div>
+              <h4>Retail Advisory</h4>
+              <p>Strategic consulting for Iceland's leading retail chains and independents.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+            <div>
+              <h4>Quality Assured</h4>
+              <p>ISO-compliant processes and Iceland Food & Vet Authority certified.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Services ── -->
+<section id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-label">What We Do</span>
+      <span class="gold-line"></span>
+      <h2>Three Pillars of<br><em style="color:var(--gold-light)">Our Business</em></h2>
+      <p>From global procurement to the last mile of Icelandic distribution — we handle every link in the chain.</p>
+    </div>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M21 10H3M21 10V18a2 2 0 01-2 2H5a2 2 0 01-2-2V10M21 10l-3.5-7h-11L3 10M9 15h6"/>
+        </svg>
+        <h3>Import &amp; Procurement</h3>
+        <p>We source and import over 200 product lines spanning food &amp; beverages, personal care, household essentials, and specialty goods — all rigorously vetted for quality and compliance with Icelandic standards.</p>
+        <div class="service-arrow">
+          Learn more <span>→</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="1" y="3" width="15" height="13" rx="1"/>
+          <path d="M16 8h4l3 3v5h-7V8zM5.5 21a2.5 2.5 0 100-5 2.5 2.5 0 000 5zm13 0a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/>
+        </svg>
+        <h3>Nationwide Distribution</h3>
+        <p>Our fleet of refrigerated and ambient vehicles covers every corner of Iceland — from Reykjavík's metropolitan stores to remote regional retailers — ensuring reliable, on-time delivery every time.</p>
+        <div class="service-arrow">
+          Learn more <span>→</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        <h3>Retail Advisory</h3>
+        <p>We partner with Iceland's leading retailers as strategic advisors — offering expertise in category management, supplier negotiations, store layout optimisation, and sustainable procurement practices.</p>
+        <div class="service-arrow">
+          Learn more <span>→</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Advisory ── -->
+<section id="advisory">
+  <div class="container">
+    <div class="advisory-inner reveal">
+      <div class="advisory-text">
+        <span class="section-label">Advisory Services</span>
+        <span class="gold-line left" style="background:linear-gradient(90deg,var(--gold),var(--gold-light))"></span>
+        <h2>Guiding Iceland's<br>Retail Future</h2>
+        <p>
+          Beyond our core import and distribution operations, Reykjavík Retail
+          serves as a trusted strategic partner for numerous retail businesses
+          across Iceland. Our team of seasoned industry veterans brings
+          years of hands-on retail expertise to every engagement.
+        </p>
+        <ul class="advisory-list">
+          <li>Category strategy &amp; assortment planning</li>
+          <li>Supplier sourcing &amp; contract negotiation</li>
+          <li>Store operations &amp; efficiency audits</li>
+          <li>Sustainability &amp; responsible sourcing</li>
+          <li>Consumer insight &amp; market analysis</li>
+          <li>Private label development</li>
+          <li>Retail expansion &amp; site selection</li>
+          <li>Digital retail transformation</li>
+        </ul>
+      </div>
+      <div class="advisory-img">
+        <img
+          src="https://images.unsplash.com/photo-1690983325551-b922137727be?w=900&q=80"
+          alt="Business advisory meeting"
+        />
+        <div class="advisory-img-overlay"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Distribution ── -->
+<section id="distribution">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-label">Distribution Network</span>
+      <span class="gold-line"></span>
+      <h2>From Port to<br><em style="color:var(--gold-light)">Every Shelf</em></h2>
+      <p>A logistics infrastructure purpose-built for Iceland's unique geography and demanding retail calendar.</p>
+    </div>
+
+    <div class="dist-grid reveal">
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <h4>Global Supplier Network</h4>
+        <p>Direct agreements with 80+ manufacturers across 25 countries.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h4>Kópavogur Warehouse</h4>
+        <p>12,000 m² state-of-the-art ambient &amp; cold-storage facility in Kópavogur.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <h4>Fleet of 40+ Vehicles</h4>
+        <p>Refrigerated and ambient trucks covering all 64 Icelandic municipalities.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <h4>Real-Time Tracking</h4>
+        <p>Live GPS &amp; temperature monitoring on every delivery, every kilometre.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></div>
+        <h4>Cold-Chain Certified</h4>
+        <p>EU HACCP &amp; ISO 22000 compliant cold-chain management for all food products.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <h4>Just-In-Time Delivery</h4>
+        <p>Flexible schedules aligned to each retailer's inventory cycle and footfall peaks.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
+        <h4>Sustainable Logistics</h4>
+        <p>Carbon-offset programme and route optimisation reducing emissions by 30%.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>50+ Retail Accounts</h4>
+        <p>Serving supermarkets, convenience stores, hospitality groups &amp; online retailers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Numbers ── -->
+<section id="numbers">
+  <div class="container">
+    <div class="numbers-grid">
+      <div class="number-item reveal">
+        <div class="number-val" data-target="200">0</div>
+        <div class="number-label">Product Lines Imported</div>
+      </div>
+      <div class="number-item reveal delay-1">
+        <div class="number-val" data-target="50">0</div>
+        <div class="number-label">Retail Partners</div>
+      </div>
+      <div class="number-item reveal delay-2">
+        <div class="number-val" data-target="25">0</div>
+        <div class="number-label">Source Countries</div>
+      </div>
+      <div class="number-item reveal delay-3">
+        <div class="number-val" data-target="12">0</div>
+        <div class="number-label">Years of Excellence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Partners Marquee ── -->
+<section id="partners">
+  <div class="container">
+    <div class="partners-label reveal">Trusted by Iceland's Leading Retailers</div>
+  </div>
+  <div class="partners-track-wrap">
+    <div class="partners-track">
+      <span class="partner-logo">Krónan</span>
+      <span class="partner-logo">Hagkaup</span>
+      <span class="partner-logo">Bónus</span>
+      <span class="partner-logo">Nóatún</span>
+      <span class="partner-logo">Fjarðarkaup</span>
+      <span class="partner-logo">Samkaup</span>
+      <span class="partner-logo">Mjólkursamsalan</span>
+      <span class="partner-logo">Góa</span>
+      <span class="partner-logo">Melabúðin</span>
+      <span class="partner-logo">Vínbúðin</span>
+      <!-- duplicate for seamless loop -->
+      <span class="partner-logo">Krónan</span>
+      <span class="partner-logo">Hagkaup</span>
+      <span class="partner-logo">Bónus</span>
+      <span class="partner-logo">Nóatún</span>
+      <span class="partner-logo">Fjarðarkaup</span>
+      <span class="partner-logo">Samkaup</span>
+      <span class="partner-logo">Mjólkursamsalan</span>
+      <span class="partner-logo">Góa</span>
+      <span class="partner-logo">Melabúðin</span>
+      <span class="partner-logo">Vínbúðin</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-label">What Partners Say</span>
+      <span class="gold-line"></span>
+      <h2>Voices of<br><em style="color:var(--gold-light)">Trust</em></h2>
+      <p>Hear from the retail leaders who rely on Reykjavík Retail day in, day out.</p>
+    </div>
+
+    <div class="testimonial-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p>Reykjavík Retail transformed our category strategy entirely. Their understanding of global supply trends, combined with an intimate knowledge of the Icelandic consumer, is simply unmatched in the industry.</p>
+        <div class="testimonial-author">
+          <strong>Retail Partner</strong>
+          <span>CEO, Icelandic Supermarket Chain</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal delay-2">
+        <div class="testimonial-quote">"</div>
+        <p>The reliability of their cold-chain delivery has given us confidence to expand our fresh produce range by 40%. On-time, every time — even in the depths of an Icelandic winter.</p>
+        <div class="testimonial-author">
+          <strong>Distribution Partner</strong>
+          <span>Head of Procurement, Icelandic Retailer</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal delay-3">
+        <div class="testimonial-quote">"</div>
+        <p>Their advisory team spent three months with us mapping inefficiencies and negotiating supplier contracts. We cut costs by 18% that year alone. A genuine partner, not just a vendor.</p>
+        <div class="testimonial-author">
+          <strong>Advisory Client</strong>
+          <span>Director of Operations, Icelandic Retail Group</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section id="contact">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-label">Get In Touch</span>
+      <span class="gold-line"></span>
+      <h2>Let's Build<br><em style="color:var(--gold-light)">Something Great</em></h2>
+      <p>Whether you're a retailer looking for a distribution partner or a brand seeking entry into the Icelandic market — we'd love to hear from you.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info reveal-left">
+        <h3>Our Kópavogur Office</h3>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div>
+            <h4>Address</h4>
+            <p>Urðarhvarf 8<br>203 Kópavogur<br>Iceland</p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 17z"/></svg></div>
+          <div>
+            <h4>Telephone</h4>
+            <p>+354 897 3603</p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div>
+            <h4>Email</h4>
+            <p>info@rvkretail.is<br>advisory@rvkretail.is</p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div>
+            <h4>Office Hours</h4>
+            <p>Monday–Friday: 08:00–17:00<br>Saturday: 09:00–13:00</p>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form reveal-right" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Jón" required />
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Sigurðsson" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="jon@company.is" required />
+        </div>
+        <div class="form-group">
+          <label>Company</label>
+          <input type="text" placeholder="Your Company Name" />
+        </div>
+        <div class="form-group">
+          <label>Enquiry Type</label>
+          <select>
+            <option value="">Select an option</option>
+            <option>Import &amp; Distribution Partnership</option>
+            <option>Retail Advisory Services</option>
+            <option>Product Listing / Brand Entry</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us about your business and how we can help..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="align-self:flex-start">
+          <span>Send Message →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h3>Reykjavík <span>Retail</span></h3>
+      <p>Iceland's leading importer, distributor and retail advisory firm. Connecting global markets to the Icelandic consumer since 2013.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#advisory">Advisory</a></li>
+        <li><a href="#distribution">Distribution</a></li>
+        <li><a href="#contact">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Import &amp; Procurement</a></li>
+        <li><a href="#services">Distribution</a></li>
+        <li><a href="#advisory">Retail Advisory</a></li>
+        <li><a href="#advisory">Category Management</a></li>
+        <li><a href="#advisory">Private Label</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+3548973603">+354 897 3603</a></li>
+        <li><a href="mailto:info@rvkretail.is">info@rvkretail.is</a></li>
+        <li><a href="#">Urðarhvarf 8, Kópavogur</a></li>
+        <li><a href="#">LinkedIn</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Reykjavík Retail ehf. — All rights reserved. Registered in Iceland.</p>
+    <div class="footer-socials">
+      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Cookie Banner ── -->
+<div id="cookieBanner" style="
+  position:fixed; bottom:0; left:0; right:0; z-index:9000;
+  background:rgba(10,10,10,.97); backdrop-filter:blur(12px);
+  border-top:1px solid rgba(201,168,76,.25);
+  padding:1.2rem 5vw; display:flex; align-items:center;
+  justify-content:space-between; gap:2rem; flex-wrap:wrap;
+">
+  <p style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:rgba(255,255,255,.6);line-height:1.7;margin:0;max-width:700px;">
+    We use cookies to improve your experience on our website. By continuing to browse you agree to our
+    <a href="#" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>.
+  </p>
+  <div style="display:flex;gap:.8rem;flex-shrink:0;">
+    <button onclick="acceptCookies()" style="
+      font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;
+      letter-spacing:.18em;text-transform:uppercase;
+      background:linear-gradient(135deg,#9A7730,#E8C97A);
+      color:#0A0A0A;border:none;padding:.6rem 1.6rem;cursor:pointer;">
+      Accept
+    </button>
+    <button onclick="declineCookies()" style="
+      font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:500;
+      letter-spacing:.15em;text-transform:uppercase;
+      background:transparent;color:rgba(255,255,255,.4);
+      border:1px solid rgba(255,255,255,.15);padding:.6rem 1.2rem;cursor:pointer;">
+      Decline
+    </button>
+  </div>
+</div>
+
+<!-- ── Back to top ── -->
+<button id="btt" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+/* ── Cookie banner ── */
+(function(){
+  if(localStorage.getItem('cookieConsent')){
+    document.getElementById('cookieBanner').style.display='none';
+  }
+})();
+function acceptCookies(){
+  localStorage.setItem('cookieConsent','accepted');
+  document.getElementById('cookieBanner').style.display='none';
+}
+function declineCookies(){
+  localStorage.setItem('cookieConsent','declined');
+  document.getElementById('cookieBanner').style.display='none';
+}
+
+/* ── Mobile nav ── */
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobileNav');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+});
+function closeMobileNav() {
+  hamburger.classList.remove('open');
+  mobileNav.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Preloader ── */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('hidden');
+    document.getElementById('hero').classList.add('loaded');
+  }, 2200);
+});
+
+/* ── Custom cursor ── */
+const dot  = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  ring.style.left = mx + 'px';
+  ring.style.top  = my + 'px';
+});
+document.querySelectorAll('a,button,.service-card,.dist-card,.testimonial-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.width  = '60px';
+    ring.style.height = '60px';
+    ring.style.borderColor = 'rgba(201,168,76,.8)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.width  = '36px';
+    ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(201,168,76,.5)';
+  });
+});
+
+/* ── Nav scroll ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 500);
+});
+
+/* ── Intersection observer reveals ── */
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => io.observe(el));
+
+/* ── Counter animation ── */
+function animateCounter(el, target, duration = 2000) {
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    el.textContent = Math.floor(progress * target);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target + (el.parentElement.querySelector('.number-label').textContent.includes('Years') ? '' : '+');
+  };
+  requestAnimationFrame(step);
+}
+const numEls = document.querySelectorAll('[data-target]');
+const numIo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target, parseInt(e.target.dataset.target));
+      numIo.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+numEls.forEach(el => numIo.observe(el));
+
+/* ── Particle canvas ── */
+const canvas = document.getElementById('particles');
+const ctx    = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resizeCanvas() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x  = Math.random() * W;
+    this.y  = Math.random() * H;
+    this.vx = (Math.random() - .5) * .3;
+    this.vy = (Math.random() - .5) * .3;
+    this.r  = Math.random() * 1.2 + .3;
+    this.a  = Math.random() * .4 + .1;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(201,168,76,${this.a})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function drawLines() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(201,168,76,${.08 * (1 - dist / 100)})`;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawLines();
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ── Form submit ── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.innerHTML = '<span>Message Sent ✓</span>';
+  btn.style.background = 'linear-gradient(135deg,#2d6a2d,#4caf50)';
+  btn.style.color = '#fff';
+  setTimeout(() => {
+    btn.innerHTML = '<span>Send Message →</span>';
+    btn.style.background = '';
+    btn.style.color = '';
+    e.target.reset();
+  }, 4000);
+}
+
+/* ── Typewriter on hero eyebrow ── */
+(function(){
+  const el = document.querySelector('.hero-eyebrow');
+  if (!el) return;
+  const text = el.textContent;
+  el.textContent = '';
+  let i = 0;
+  const timer = setInterval(() => {
+    el.textContent += text[i++];
+    if (i >= text.length) clearInterval(timer);
+  }, 38);
+})();
+
+
+/* ── 3D card tilt ── */
+document.querySelectorAll('.service-card, .dist-card, .testimonial-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale(1.02)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(600px) rotateY(0) rotateX(0) scale(1)';
+    card.style.transition = 'transform .5s ease';
+  });
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'transform .1s ease';
+  });
+});
+
+/* ── Magnetic buttons ── */
+document.querySelectorAll('.btn-primary, .btn-outline, .nav-cta').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width  / 2) * 0.25;
+    const y = (e.clientY - r.top  - r.height / 2) * 0.25;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = 'translate(0,0)';
+    btn.style.transition = 'transform .4s ease';
+  });
+  btn.addEventListener('mouseenter', () => {
+    btn.style.transition = 'transform .1s ease';
+  });
+});
+
+/* ── Ripple on click ── */
+document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => {
+  btn.addEventListener('click', e => {
+    const r = btn.getBoundingClientRect();
+    const size = Math.max(r.width, r.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 700);
+  });
+});
+
+/* ── Parallax hero bg ── */
+window.addEventListener('scroll', () => {
+  const bg = document.querySelector('.hero-bg');
+  if (bg) bg.style.transform = `translateY(${window.scrollY * .25}px) scale(1)`;
+});
+</script>
+</body>
+</html>
